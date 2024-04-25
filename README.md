@@ -1,6 +1,7 @@
 ## Teoria Kompilacji i Kompilatory - Projekt
 ### Autorzy: Amelia Adamczuk, Magdalena Bernat
-
+\n
+\n
 
 ## JaviPy Java to Python Converter
 ### Tokeny:
