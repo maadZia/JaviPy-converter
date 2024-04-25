@@ -44,5 +44,5 @@
    * '// komentarz'
    * '/* komentarz */'
 10. WHITESPACES
-   * '\n'
-   * '\t' 
+    * '\n'
+    * '\t'
