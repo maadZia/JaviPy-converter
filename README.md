@@ -50,14 +50,12 @@
    
 
 #### Gramatyka:
-
-    <code style="color : blue">program</code> : (class_declaration | function_declaration | statement)*
-
-    class_declaration : 'class' IDENTIFIER ':' INDENT (class_member)* DEDENT
-    class_member : function_declaration | attribute_declaration
-    function_declaration : 'def' IDENTIFIER '(' parameter_list? ')' ':' block
-    attribute_declaration : IDENTIFIER '=' expression
-    parameter_list : IDENTIFIER (',' IDENTIFIER)*
+  <code style="color : blue">program</code> : (class_declaration | function_declaration | statement)*
+  class_declaration : 'class' IDENTIFIER ':' INDENT (class_member)* DEDENT
+  class_member : function_declaration | attribute_declaration
+  function_declaration : 'def' IDENTIFIER '(' parameter_list? ')' ':' block
+  attribute_declaration : IDENTIFIER '=' expression
+  parameter_list : IDENTIFIER (',' IDENTIFIER)*
 
     block       : INDENT statement* DEDENT
     statement   : expression | assignment | conditional | loop | return_statement | print_statement | COMMENT
