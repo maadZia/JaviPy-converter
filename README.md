@@ -50,7 +50,7 @@
    
 
 #### Gramatyka:
-```
+
     <code style="color : blue">program</code> : (class_declaration | function_declaration | statement)*
 
     class_declaration : 'class' IDENTIFIER ':' INDENT (class_member)* DEDENT
@@ -69,4 +69,3 @@
 
     return_statement : 'return' expression
     print_statement : 'print' '(' expression ')'
-```
