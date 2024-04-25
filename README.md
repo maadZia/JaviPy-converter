@@ -18,6 +18,7 @@
    * 'if'
    * 'else'
    * 'while'
+   * 'break'
    * 'return'
 6. TYPE
    * 'void'
@@ -49,21 +50,19 @@
    
 
 #### Gramatyka:
-```python
-    program : (class_declaration | function_declaration | statement)*
+```
+    <code style="color : blue">program</code> : (class_declaration | function_declaration | statement)*
 
     class_declaration : 'class' IDENTIFIER ':' INDENT (class_member)* DEDENT
     class_member : function_declaration | attribute_declaration
     function_declaration : 'def' IDENTIFIER '(' parameter_list? ')' ':' block
-
     attribute_declaration : IDENTIFIER '=' expression
-
     parameter_list : IDENTIFIER (',' IDENTIFIER)*
 
     block       : INDENT statement* DEDENT
     statement   : expression | assignment | conditional | loop | return_statement | print_statement | COMMENT
-    expression  : term (operator term)*
-    term        : IDENTIFIER | LITERAL | '(' expression ')'
+    expression  : term (OPERATOR term)*
+    term        : IDENTIFIER | NUMBER | DECIMAL | STRING | '(' expression ')'
     assignment  : IDENTIFIER '=' expression
     conditional : 'if' expression ':' block ('elif' expression ':' block)* ('else' ':' block)?
     loop        : 'for' IDENTIFIER 'in' expression ':' block
