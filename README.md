@@ -1,9 +1,9 @@
-## Teoria Kompilacji i Kompilatory - Projekt
+# JaviPy Java to Python Converter
+### Teoria Kompilacji i Kompilatory - Projekt
 ### Autorzy: Amelia Adamczuk, Magdalena Bernat
 
 
-## JaviPy Java to Python Converter
-### Tokeny:
+## Tokeny:
 1. IDENTIFIER
    * '[a-zA-Z_][a-zA-Z0-9_]*'
 3. NUMBER
@@ -49,7 +49,7 @@
     * '\t'
    
 
-### Gramatyka:
+## Gramatyka:
 
     program : (class_declaration | function_declaration | statement)*
     class_declaration : 'class' IDENTIFIER ':' INDENT (class_member)* DEDENT
