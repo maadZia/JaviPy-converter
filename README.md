@@ -50,12 +50,16 @@
 
 #### Gramatyka:
 ```python
-program     : (class_declaration | function_declaration | statement)*
+    program : (class_declaration | function_declaration | statement)*
+
     class_declaration : 'class' IDENTIFIER ':' INDENT (class_member)* DEDENT
     class_member : function_declaration | attribute_declaration
     function_declaration : 'def' IDENTIFIER '(' parameter_list? ')' ':' block
+
     attribute_declaration : IDENTIFIER '=' expression
+
     parameter_list : IDENTIFIER (',' IDENTIFIER)*
+
     block       : INDENT statement* DEDENT
     statement   : expression | assignment | conditional | loop | return_statement | print_statement | COMMENT
     expression  : term (operator term)*
@@ -63,6 +67,7 @@ program     : (class_declaration | function_declaration | statement)*
     assignment  : IDENTIFIER '=' expression
     conditional : 'if' expression ':' block ('elif' expression ':' block)* ('else' ':' block)?
     loop        : 'for' IDENTIFIER 'in' expression ':' block
+
     return_statement : 'return' expression
     print_statement : 'print' '(' expression ')'
 ```
