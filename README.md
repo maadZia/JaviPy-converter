@@ -46,3 +46,11 @@
 10. WHITESPACES
     * '\n'
     * '\t'
+   
+
+```
+def hello_world():
+    print("Hello, world!")
+
+hello_world()
+```
