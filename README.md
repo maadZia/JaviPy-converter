@@ -4,20 +4,20 @@
 
 
 ## Tokeny:
-```py
-//literal
+```ruby
+#literal
 IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*
 NUMBER: '-'? ( '0' | [1-9][0-9]* ) ( '.' [0-9]+ )?
 STRING: (".*?"|'.*?')
 
-// type
+#type
 VOID: 'void'
 INT: 'int'
 FLOAT: 'float'
 STRING: 'string'
 BOOLEAN: 'boolean'
 
-// keyword
+#keyword
 CLASS: 'class'
 FOR: 'for'
 IF: 'if'
@@ -27,8 +27,9 @@ BREAK: 'break'
 RETURN: 'return'
 TRY: 'try'
 CATCH: 'catch'
+IMPORT: 'import'
 
-// operator
+#operator
 PLUS: '+'
 MINUS: '-'
 MULTIPLY: '*'
@@ -43,7 +44,7 @@ MOREOREQ: '>='
 OR: '||'
 AND: '&&'
 
-// delimiter
+#delimiter
 SEMICOLON: ';'
 LEFTPAREN: '('
 RIGHTPAREN: ')'
@@ -52,7 +53,7 @@ RIGHTBRACKET: ']'
 LEFTBRACE: '{'
 RIGHTBRACE: '}'
 
-COMMENT: '//' ~('\n' | '\r')* '\n'?  | '/*' .*? '*/' -> skip;
+COMMENT: ('//' ~('\n' | '\r')* '\n'?  | '/*' .*? '*/') -> skip;
 NEWLINE: '\n'
 WHITESPACE: '\t'
 ```
@@ -86,11 +87,10 @@ statement           : expression
                     | pass_statement
                     | import_statement
 
-expression          : term (OPERATOR term)*
+expression          : term ((PLUS | MINUS | MULTIPLY | DIVIDE | EQUAL | NOTEQUAL | LESS | LESSOREQ | MORE | MOREOREQ | OR | AND) term)*
 
 term                : IDENTIFIER 
                     | NUMBER 
-                    | DECIMAL 
                     | STRING 
                     | '(' expression ')'
                     | function_call
