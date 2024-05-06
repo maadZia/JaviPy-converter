@@ -51,21 +51,91 @@
 
 ## Gramatyka:
 ```ruby
-    program : (class_declaration | function_declaration | statement)*
-    class_declaration : 'class' IDENTIFIER ':' INDENT (class_member)* DEDENT
-    class_member : function_declaration | attribute_declaration
-    function_declaration : 'def' IDENTIFIER '(' parameter_list? ')' ':' block
-    attribute_declaration : IDENTIFIER '=' expression
-    parameter_list : IDENTIFIER (',' IDENTIFIER)*
+program             : (class_declaration | function_declaration | statement)*
 
-    block       : INDENT statement* DEDENT
-    statement   : expression | assignment | conditional | loop | return_statement | print_statement | COMMENT
-    expression  : term (OPERATOR term)*
-    term        : IDENTIFIER | NUMBER | DECIMAL | STRING | '(' expression ')'
-    assignment  : IDENTIFIER '=' expression
-    conditional : 'if' expression ':' block ('elif' expression ':' block)* ('else' ':' block)?
-    loop        : 'for' IDENTIFIER 'in' expression ':' block
+class_declaration   : 'class' IDENTIFIER ':' INDENT (class_member)* DEDENT
+class_member        : function_declaration | attribute_declaration
 
-    return_statement : 'return' expression
-    print_statement : 'print' '(' expression ')'
+function_declaration : 'def' IDENTIFIER '(' parameter_list? ')' ':' block
+
+attribute_declaration : IDENTIFIER '=' expression
+
+parameter_list      : IDENTIFIER (',' IDENTIFIER)*
+
+block               : INDENT statement* DEDENT
+
+statement           : expression 
+                    | assignment 
+                    | conditional 
+                    | loop 
+                    | return_statement 
+                    | print_statement 
+                    | COMMENT
+                    | try_catch_statement
+                    | break_statement
+                    | continue_statement
+                    | pass_statement
+                    | import_statement
+                    | raise_statement
+                    | delete_statement
+                    | assert_statement
+                    | yield_statement
+                    | lambda_expression
+                    | with_statement
+                    | global_statement
+                    | nonlocal_statement
+
+expression          : term (OPERATOR term)*
+
+term                : IDENTIFIER 
+                    | NUMBER 
+                    | DECIMAL 
+                    | STRING 
+                    | '(' expression ')'
+                    | function_call
+
+assignment          : IDENTIFIER '=' expression
+
+conditional         : 'if' expression ':' block ('elif' expression ':' block)* ('else' ':' block)?
+
+loop                : 'for' IDENTIFIER 'in' expression ':' block
+                    | 'while' expression ':' block
+
+return_statement    : 'return' expression
+
+print_statement     : 'print' '(' expression ')'
+
+function_call       : IDENTIFIER '(' argument_list? ')'
+
+argument_list       : expression (',' expression)*
+
+try_catch_statement : 'try' ':' block 'except' IDENTIFIER ':' block
+                    | 'try' ':' block 'except' IDENTIFIER 'as' IDENTIFIER ':' block
+
+break_statement     : 'break'
+
+continue_statement  : 'continue'
+
+pass_statement      : 'pass'
+
+import_statement    : 'import' module_name
+
+raise_statement     : 'raise' expression
+
+delete_statement    : 'del' expression
+
+assert_statement    : 'assert' expression (',' expression)?
+
+yield_statement     : 'yield' expression
+
+lambda_expression   : 'lambda' parameter_list ':' expression
+
+with_statement      : 'with' with_item (',' with_item)* ':' block
+
+with_item           : expression ('as' IDENTIFIER)?
+
+global_statement    : 'global' IDENTIFIER (',' IDENTIFIER)*
+
+nonlocal_statement  : 'nonlocal' IDENTIFIER (',' IDENTIFIER)*
+
 ```
