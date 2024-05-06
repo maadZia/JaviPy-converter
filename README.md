@@ -4,20 +4,20 @@
 
 
 ## Tokeny:
-```ruby
-#literal
+```antlr
+// literal
 IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*
 NUMBER: '-'? ( '0' | [1-9][0-9]* ) ( '.' [0-9]+ )?
 STRING: (".*?"|'.*?')
 
-#type
+// type
 VOID: 'void'
 INT: 'int'
 FLOAT: 'float'
 STRING: 'string'
 BOOLEAN: 'boolean'
 
-#keyword
+// keyword
 CLASS: 'class'
 FOR: 'for'
 IF: 'if'
@@ -29,7 +29,7 @@ TRY: 'try'
 CATCH: 'catch'
 IMPORT: 'import'
 
-#operator
+// operator
 PLUS: '+'
 MINUS: '-'
 MULTIPLY: '*'
@@ -44,7 +44,7 @@ MOREOREQ: '>='
 OR: '||'
 AND: '&&'
 
-#delimiter
+// delimiter
 SEMICOLON: ';'
 LEFTPAREN: '('
 RIGHTPAREN: ')'
@@ -59,7 +59,7 @@ WHITESPACE: '\t'
 ```
 
 ## Gramatyka:
-```ruby
+```antlr
 program             : (class_declaration | function_declaration | statement)*
 
 class_declaration   : 'class' IDENTIFIER ':' INDENT (class_member)* DEDENT
