@@ -76,14 +76,8 @@ statement           : expression
                     | continue_statement
                     | pass_statement
                     | import_statement
-                    | raise_statement
-                    | delete_statement
-                    | assert_statement
-                    | yield_statement
                     | lambda_expression
                     | with_statement
-                    | global_statement
-                    | nonlocal_statement
 
 expression          : term (OPERATOR term)*
 
@@ -120,22 +114,12 @@ pass_statement      : 'pass'
 
 import_statement    : 'import' module_name
 
-raise_statement     : 'raise' expression
-
-delete_statement    : 'del' expression
-
-assert_statement    : 'assert' expression (',' expression)?
-
-yield_statement     : 'yield' expression
-
 lambda_expression   : 'lambda' parameter_list ':' expression
 
 with_statement      : 'with' with_item (',' with_item)* ':' block
 
 with_item           : expression ('as' IDENTIFIER)?
 
-global_statement    : 'global' IDENTIFIER (',' IDENTIFIER)*
 
-nonlocal_statement  : 'nonlocal' IDENTIFIER (',' IDENTIFIER)*
 
 ```
