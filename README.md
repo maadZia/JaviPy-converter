@@ -2,6 +2,11 @@
 ### Teoria Kompilacji i Kompilatory - Projekt
 #### Autorzy: Amelia Adamczuk, Magdalena Bernat
 
+***
+***
+## Założenia projektu
+JaviPy to proste w obsłudze narzędzie umożliwiające konwersję kodu źródłowego napisanego w języku Java <br>
+na równoważny kod w języku Python, zachowując w pełni jego zgodność i funkcjonalność.
 
 ## Tokeny:
 ```antlr
