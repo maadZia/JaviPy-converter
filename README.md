@@ -4,50 +4,58 @@
 
 
 ## Tokeny:
-1. IDENTIFIER
-   * '[a-zA-Z_][a-zA-Z0-9_]*'
-3. NUMBER
-   * '-?\d+'
-4. DECIMAL
-   * '-?\d+(\.\d+)'
-4. STRING
-   * '(".?"|'.?')'
-5. KEYWORD
-   * 'class'
-   * 'for'
-   * 'if'
-   * 'else'
-   * 'while'
-   * 'break'
-   * 'return'
-6. TYPE
-   * 'void'
-   * 'int'
-   * 'float'
-   * 'boolean'
-   * 'string'
-7. OPERATOR
-   * '+'
-   * '-'
-   * '*'
-   * '/'
-   * '='
-   * '=='
-   * '!='
-8. DELIMITER
-   * ';' 
-   * '{' 
-   * '}' 
-   * '(' 
-   * ')' 
-   * ','
-9. COMMENT
-   * '// komentarz'
-   * '/* komentarz */'
-10. WHITESPACES
-    * '\n'
-    * '\t'
-   
+```ruby
+// literal
+IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*
+NUMBER: '-'? ( '0' | [1-9][0-9]* ) ( '.' [0-9]+ )?
+STRING: (".*?"|'.*?')
+
+// type
+VOID: 'void'
+INT: 'int'
+FLOAT: 'float'
+STRING: 'string'
+BOOLEAN: 'boolean'
+
+// keyword
+CLASS: 'class'
+FOR: 'for'
+IF: 'if'
+ELSE: 'else'
+WHILE: 'while'
+BREAK: 'break'
+RETURN: 'return'
+TRY: 'try'
+CATCH: 'catch'
+
+// operator
+PLUS: '+'
+MINUS: '-'
+MULTIPLY: '*'
+DIVIDE: '/'
+ASSIGN: '='
+EQUAL: '=='
+NOTEQUAL: '!='
+LESS: '<'
+LESSOREQ: '<='
+MORE: '>'
+MOREOREQ: '>='
+OR: '||'
+AND: '&&'
+
+// delimiter
+SEMICOLON: ';'
+LEFTPAREN: '('
+RIGHTPAREN: ')'
+LEFTBRACKET: '['
+RIGHTBRACKET: ']'
+LEFTBRACE: '{'
+RIGHTBRACE: '}'
+
+COMMENT: '//' ~('\n' | '\r')* '\n'?  | '/*' .*? '*/' -> skip;
+NEWLINE: '\n'
+WHITESPACE: '\t'
+```
 
 ## Gramatyka:
 ```ruby
@@ -72,12 +80,11 @@ statement           : expression
                     | print_statement 
                     | COMMENT
                     | try_catch_statement
+                    | with_statement
                     | break_statement
                     | continue_statement
                     | pass_statement
                     | import_statement
-                    | lambda_expression
-                    | with_statement
 
 expression          : term (OPERATOR term)*
 
@@ -114,12 +121,8 @@ pass_statement      : 'pass'
 
 import_statement    : 'import' module_name
 
-lambda_expression   : 'lambda' parameter_list ':' expression
-
 with_statement      : 'with' with_item (',' with_item)* ':' block
 
 with_item           : expression ('as' IDENTIFIER)?
-
-
 
 ```
