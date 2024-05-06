@@ -50,7 +50,7 @@
    
 
 ## Gramatyka:
-```python
+```ruby
     program : (class_declaration | function_declaration | statement)*
     class_declaration : 'class' IDENTIFIER ':' INDENT (class_member)* DEDENT
     class_member : function_declaration | attribute_declaration
@@ -68,3 +68,4 @@
 
     return_statement : 'return' expression
     print_statement : 'print' '(' expression ')'
+```
