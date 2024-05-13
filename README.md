@@ -96,7 +96,7 @@ constructor         : IDENTIFIER LEFTPAREN parameter_list? RIGHTPAREN block
 data_type           : INT | FLOAT | STRING | BOOLEAN | IDENTIFIER  //dla obiektow klas
 type                : VOID | data_type
 literal             : NUMBER | TEXT | TRUE | FALSE | NULL
-parameter_list      : parameter (COMMA parametr)*
+parameter_list      : parameter (COMMA parameter)*
 parameter           : data_type IDENTIFIER
 
 block               : LEFTBRACE (statement SEMICOLON)* RIGHTBRACE
@@ -129,14 +129,14 @@ arithmetic_operator : PLUS
                       | MINUS
                       | MULTIPLY
                       | DIVIDE
-                      | EQUAL
-                      | NOTEQUAL
                       | compare_operator
 
 compare_operator    : LESS
                       | LESSOREQ
                       | MORE
                       | MOREOREQ
+                      | EQUAL
+                      | NOTEQUAL
 
 
 if_statement        : IF LEFTPAREN expression RIGHTPAREN block (else_statement)*
