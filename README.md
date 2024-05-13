@@ -30,11 +30,16 @@ IF: 'if'
 ELSE: 'else'
 WHILE: 'while'
 BREAK: 'break'
+SWITCH: 'switch'
+CASE: 'case'
+DEFAULT: 'default'
 CONTINUE: 'continue'
 RETURN: 'return'
 TRY: 'try'
 CATCH: 'catch'
 IMPORT: 'import'
+PRINT: 'System.out.print'
+PRINTLN: 'System.out.println'
 
 // operator
 PLUS: '+'
@@ -51,9 +56,12 @@ MOREOREQ: '>='
 OR: '||'
 AND: '&&'
 NOT: '!'
+INCREMENT: '++'
+DECREMENT: '--'
 
 // delimiter
 SEMICOLON: ';'
+COLON: ':'
 LEFTPAREN: '('
 RIGHTPAREN: ')'
 LEFTBRACKET: '['
@@ -61,6 +69,7 @@ RIGHTBRACKET: ']'
 LEFTBRACE: '{'
 RIGHTBRACE: '}'
 COMMA: ','
+DOT: '.'
 
 COMMENT: ('//' ~('\n' | '\r')* '\n'?  | '/*' .*? '*/') -> skip;
 NEWLINE: '\n'
@@ -84,16 +93,18 @@ field_declaration   : data_type IDENTIFIER (ASSIGN literal)? SEMICOLON
 method_declaration  : type IDENTIFIER LEFTPAREN parameter_list? RIGHTPAREN block
 constructor         : IDENTIFIER LEFTPAREN parameter_list? RIGHTPAREN block
 
-data_type           : INT | FLOAT | STRING | BOOLEAN
+data_type           : INT | FLOAT | STRING | BOOLEAN | IDENTIFIER  //dla obiektow klas
 type                : VOID | data_type
 literal             : NUMBER | TEXT | TRUE | FALSE | NULL
 parameter_list      : parameter (COMMA parametr)*
 parameter           : data_type IDENTIFIER
 
 block               : LEFTBRACE (statement SEMICOLON)* RIGHTBRACE
+
 statement           : assignment
                       | expression  
-                      | if_statement 
+                      | if_statement
+                      | switch_case_statement
                       | loop_statement
                       | try_catch_statement
                       | print_statement
@@ -101,7 +112,6 @@ statement           : assignment
                       | break_statement
                       | continue_statement
                       | function_call
-                      | COMMENT
 
 assignment          : data_type? IDENTIFIER ASSIGN (literal | IDENTIFIER)
 
@@ -109,72 +119,56 @@ expression          : logical_expression | arithmetic_expression
 
 logical_expression  : logical_term (logical_operator logical_term)*
 logical_term        : NOT? (LEFTPAREN logical_expression RIGHTPAREN | IDENTIFIER | literal | arithmetic_expression)
+
 logical_operator    : OR | AND
 
 arithmetic_expression : arithmetic_term (arithmetic_operator arithmetic_term)*
 arithmetic_term     : LEFTPAREN arithmetic_expression RIGHTPAREN | IDENTIFIER | literal
+
 arithmetic_operator : PLUS
                       | MINUS
                       | MULTIPLY
                       | DIVIDE
                       | EQUAL
                       | NOTEQUAL
-                      | LESS
+                      | compare_operator
+
+compare_operator    : LESS
                       | LESSOREQ
                       | MORE
                       | MOREOREQ
 
-if_statement        :
+
+if_statement        : IF LEFTPAREN expression RIGHTPAREN block (else_statement)*
+else_statement      : ELSE if_statement
+
+switch_case_statement : SWITCH LEFTPAREN IDENTIFIER RIGHTPAREN LEFTBRACE switch_block RIGHTBRACE
+switch_block        : (switch_case)* default_case
+switch_case         : CASE (IDENTIFIER | TEXT) COLON (statement SEMICOLON)+
+default_case        : DEFAULT COLON (statement SEMICOLON)+
+
 loop_statement      : for_statement | while_statement
-try_catch_statement :
-print_statement     :
-return_statement    :
-break_statement     :
-continue_statement  :
-funcion_call        :
 
-//dopisac mozliwosc dodawania komentarzy
+for_statement       : FOR LEFTPAREN assignment SEMICOLON for_condition SEMICOLON for_iteration RIGHTPAREN block
+for_condition       : IDENTIFIER compare_operator (IDENTIFIER | literal)
+for_iteration       : IDENTIFIER (INCREMENT | DECREMENT)
 
+while_statement     : WHILE LEFTPAREN while_condition RIGHTPAREN block
+while_condition     : for_condition | IDENTIFIER
 
-/*
+try_catch_statement : TRY block (catch_statement)+
+catch_statement     : CATCH LEFTPAREN data_type IDENTIFIER RIGHTPAREN block
 
-expression          : term ((PLUS | MINUS | MULTIPLY | DIVIDE | EQUAL | NOTEQUAL | LESS | LESSOREQ | MORE | MOREOREQ | OR | AND) term)*
+print_statement     : (PRINT | PRINTLN) LEFTPAREN print_term RIGHTPAREN
+print_term          : TEXT (PLUS (IDENTIFIER | LEFTPAREN expression RIGHTPAREN))?
+                      | IDENTIFIER (COMMA IDENTIFIER)*
+                      | expression
 
-term                : IDENTIFIER 
-                    | NUMBER 
-                    | STRING 
-                    | '(' expression ')'
-                    | function_call
+return_statement    : RETURN (IDENTIFIER | literal)?
+break_statement     : BREAK
+continue_statement  : CONTINUE
 
-assignment          : IDENTIFIER '=' expression
+funcion_call        : IDENTIFIER LEFTPAREN IDENTIFIER? (COMMA IDENTIFIER)* RIGHTPAREN
 
-conditional         : 'if' expression ':' block ('elif' expression ':' block)* ('else' ':' block)?
-
-loop                : 'for' IDENTIFIER 'in' expression ':' block
-                    | 'while' expression ':' block
-
-return_statement    : 'return' expression
-
-print_statement     : 'print' '(' expression ')'
-
-function_call       : IDENTIFIER '(' argument_list? ')'
-
-argument_list       : expression (',' expression)*
-
-try_catch_statement : 'try' ':' block 'except' IDENTIFIER ':' block
-                    | 'try' ':' block 'except' IDENTIFIER 'as' IDENTIFIER ':' block
-
-break_statement     : 'break'
-
-continue_statement  : 'continue'
-
-pass_statement      : 'pass'
-
-import_statement    : 'import' module_name
-
-with_statement      : 'with' with_item (',' with_item)* ':' block
-*/
-
-with_item           : expression ('as' IDENTIFIER)?
 
 ```
