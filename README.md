@@ -13,7 +13,7 @@ na równoważny kod w języku Python, zachowując w pełni jego zgodność i fun
 // literal
 IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*
 NUMBER: '-'? ( '0' | [1-9][0-9]* ) ( '.' [0-9]+ )?
-STRING: (".*?"|'.*?')
+TEXT: (".*?"|'.*?')
 NULL: 'null'
 
 // type
@@ -80,14 +80,15 @@ enum_body           : IDENTIFIER (COMMA IDENTIFIER)*
 class_declaration   : CLASS IDENTIFIER LEFTBRACE class_body RIGHTBRACE
 class_body          : (field_declaration | method_declaration | constructor)*
 
-field_declaration   : type IDENTIFIER (ASSIGN literal)? SEMICOLON
+field_declaration   : data_type IDENTIFIER (ASSIGN literal)? SEMICOLON
 method_declaration  : type IDENTIFIER LEFTPAREN parameter_list? RIGHTPAREN block
 constructor         : IDENTIFIER LEFTPAREN parameter_list? RIGHTPAREN block
 
-type                : VOID | INT | FLOAT | STRING | BOOLEAN
-literal             : NUMBER | STRING | TRUE | FALSE | NULL
+data_type           : INT | FLOAT | STRING | BOOLEAN
+type                : VOID | data_type
+literal             : NUMBER | TEXT | TRUE | FALSE | NULL
 parameter_list      : parameter (COMMA parametr)*
-parameter           : type_specifier IDENTIFIER
+parameter           : data_type IDENTIFIER
 
 block               : LEFTBRACE (statement SEMICOLON)* RIGHTBRACE
 statement           : assignment
@@ -102,7 +103,7 @@ statement           : assignment
                       | function_call
                       | COMMENT
 
-assignment          : type? IDENTIFIER ASSIGN (literal | IDENTIFIER)
+assignment          : data_type? IDENTIFIER ASSIGN (literal | IDENTIFIER)
 
 expression          : logical_expression | arithmetic_expression
 
