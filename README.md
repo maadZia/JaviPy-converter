@@ -15,6 +15,8 @@ IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*
 NUMBER: '-'? ( '0' | [1-9][0-9]* ) ( '.' [0-9]+ )?
 TEXT: (".*?"|'.*?')
 NULL: 'null'
+TRUE: 'true'
+FALSE: 'false'
 
 // type
 VOID: 'void'
@@ -25,6 +27,9 @@ BOOLEAN: 'boolean'
 
 // keyword
 CLASS: 'class'
+PUBLIC: 'public'
+PRIVATE: 'private'
+PROTECTED: 'protected'
 FOR: 'for'
 IF: 'if'
 ELSE: 'else'
@@ -81,7 +86,7 @@ WHITESPACE: '\t'
 program             : (import_statement)* declaration+
 
 import_statement    : IMPORT IDENTIFIER (DOT IDENTIFIER)* SEMICOLON
-declaration         : class_declaration | enum_declaration
+declaration         : access? (class_declaration | enum_declaration)
 
 enum_declaration    : ENUM IDENTIFIER LEFTBRACE enum_body RIGHTBRACE
 enum_body           : IDENTIFIER (COMMA IDENTIFIER)*
@@ -89,9 +94,11 @@ enum_body           : IDENTIFIER (COMMA IDENTIFIER)*
 class_declaration   : CLASS IDENTIFIER LEFTBRACE class_body RIGHTBRACE
 class_body          : (field_declaration | method_declaration | constructor)*
 
-field_declaration   : data_type IDENTIFIER (ASSIGN literal)? SEMICOLON
-method_declaration  : type IDENTIFIER LEFTPAREN parameter_list? RIGHTPAREN block
-constructor         : IDENTIFIER LEFTPAREN parameter_list? RIGHTPAREN block
+field_declaration   : access? data_type IDENTIFIER (ASSIGN literal)? SEMICOLON
+method_declaration  : access? type IDENTIFIER LEFTPAREN parameter_list? RIGHTPAREN block
+constructor         : access? IDENTIFIER LEFTPAREN parameter_list? RIGHTPAREN block
+
+access              : PUBLIC | PRIVATE | PROTECTED
 
 data_type           : INT | FLOAT | STRING | BOOLEAN | IDENTIFIER  //dla obiektow klas
 type                : VOID | data_type
@@ -154,7 +161,7 @@ for_condition       : IDENTIFIER compare_operator (IDENTIFIER | literal)
 for_iteration       : IDENTIFIER (INCREMENT | DECREMENT)
 
 while_statement     : WHILE LEFTPAREN while_condition RIGHTPAREN block
-while_condition     : for_condition | IDENTIFIER
+while_condition     : for_condition | IDENTIFIER | NUMBER | TRUE | FALSE
 
 try_catch_statement : TRY block (catch_statement)+
 catch_statement     : CATCH LEFTPAREN data_type IDENTIFIER RIGHTPAREN block
