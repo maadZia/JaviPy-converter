@@ -1,4 +1,4 @@
-//kod z pierwszego parsetree
+//first parsetree code
 
 public static class Main {
         public void main(String[] args) {
