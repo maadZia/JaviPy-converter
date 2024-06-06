@@ -15,7 +15,8 @@ na równoważny kod w języku Python, zachowując w pełni jego zgodność i fun
 W folderze grammar znajduje się spis wszystkich rozpoznawanych przez nasz konwerter tokenów oraz wybranych produkcji gramatycznych języka Java.
 Każdy program musi zaczynać się od deklaracji klasy lub opcjonalych importów. W składowe każdej klasy mogą wchodzić <br>
 między innymi deklaracje zmiennych i metod z możliwymi modyfikatorami dostępu (public/private/protected/static). W ciele każdej metody, <br>
-poza deklaracjami zmiennych, mogą zjadować się np. instrukcje warunkowe, pętle czy wywołania innych metod.
+poza deklaracjami zmiennych, mogą zjadować się np. instrukcje warunkowe, pętle czy wywołania innych metod. <br>
+> [javipyGrammar](https://github.com/maadZia/JaviPy-converter/blob/main/grammar/javipyGrammar.g4)
 
 ## Drzewa składniowe
 Folder example/img zawiera cztery przykładowe drzewa wygenerowane na podstawie odpowiednich fragmentów kodu z katalogu example/code, np.: <br><br>
@@ -31,5 +32,9 @@ public class Main {
 ```
 parseTree1.png
 ![](https://github.com/maadZia/JaviPy-converter/blob/main/example/img/parseTree1.png)
+
+## Instrukcja obsługi
+> [how to use](https://github.com/maadZia/JaviPy-converter/blob/main/instructions/instruction.md)
+
 ***
 ***
