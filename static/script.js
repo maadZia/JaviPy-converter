@@ -12,9 +12,9 @@ async function convert() {
     if (response.ok) {
         document.getElementById('output').value = result.python_code;
     } else {
-        console.error('Conversion error:', result.error);
+        document.getElementById('output').value = `Conversion error: ${result.error}`;
         if (result.details) {
-            console.error('Details:', result.details);
+            document.getElementById('output').value += `\nDetails: ${result.details}`;
         }
     }
 }
