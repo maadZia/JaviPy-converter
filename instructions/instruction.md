@@ -12,7 +12,7 @@ tylko dla kodu zgodnego z gramatyką zawartą w pliku grammar/javipyGrammar.g4. 
 ![](https://github.com/maadZia/JaviPy-converter/blob/main/instructions/img/instruction1.png)
 
 Jednym z kluczowych aspektów konwertera jest uwzględnienie sprawdzania, czy wszystkie zmienne używane
-w kodzie źródłowym zostały odpowiednio zadeklarowane. <br>
+w kodzie źródłowym zostały odpowiednio zadeklarowane.
 Jeśli konwerter stwierdzi, że zmienna została użyta bez wcześniejszej deklaracji, generowany jest komunikat błędu, 
 który następnie wyświetlany jest w pliku wyjściowym zamiast przetłumaczonego kodu.
 
