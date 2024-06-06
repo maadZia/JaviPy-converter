@@ -1,8 +1,5 @@
-
 from flask import Flask, request, jsonify, send_from_directory
-import subprocess
-import os
-from main import main
+from main import main, ConversionError
 
 app = Flask(__name__, static_folder='static')
 
@@ -22,8 +19,10 @@ def convert():
 
     try:
         main('input.java', 'output.py')
-    except Exception as e:
+    except ConversionError as e:
         return jsonify({'error': str(e)}), 500
+    except Exception as e:
+        return jsonify({'error': 'Unexpected error occurred', 'details': str(e)}), 500
 
     try:
         with open('output.py', 'r') as f:
