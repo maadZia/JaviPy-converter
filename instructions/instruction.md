@@ -27,3 +27,10 @@ Aplikacja posiada także prosty w obsłudze interfejs graficzny
 - kliknij przycisk 'convert'
   
 ![](https://github.com/maadZia/JaviPy-converter/blob/main/instructions/img/instruction3.png)
+
+
+Obsługa błędów:
+
+![](https://github.com/maadZia/JaviPy-converter/blob/main/instructions/img/instruction4.png)
+
+![](https://github.com/maadZia/JaviPy-converter/blob/main/instructions/img/instruction5.png)
