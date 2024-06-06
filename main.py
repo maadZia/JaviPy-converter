@@ -9,7 +9,7 @@ def main(input_file, output_file):
     except SyntaxError as e:
         raise ConversionError(str(e))
     except Exception as e:
-        raise ConversionError(f"Unexpected error during conversion: {str(e)}")
+        raise ConversionError(f"{str(e)}")
 
     with open(output_file, 'w') as file:
         file.write(converted_code)
