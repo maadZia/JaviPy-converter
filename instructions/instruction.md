@@ -31,6 +31,5 @@ Aplikacja posiada także prosty w obsłudze interfejs graficzny
 
 Obsługa błędów:
 
-![](https://github.com/maadZia/JaviPy-converter/blob/main/instructions/img/instruction4.png)
+<img src="https://github.com/maadZia/JaviPy-converter/blob/main/instructions/img/instruction4.png" width="500"/> <img src="https://github.com/maadZia/JaviPy-converter/blob/main/instructions/img/instruction5.png" width="500"/>
 
-![](https://github.com/maadZia/JaviPy-converter/blob/main/instructions/img/instruction5.png)
