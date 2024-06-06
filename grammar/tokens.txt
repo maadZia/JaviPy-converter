@@ -7,7 +7,6 @@ BOOLEAN: 'boolean';
 
 // keyword
 CLASS: 'class';
-ENUM: 'enum';
 PUBLIC: 'public';
 PRIVATE: 'private';
 PROTECTED: 'protected';
@@ -34,6 +33,7 @@ PLUS: '+';
 MINUS: '-';
 MULTIPLY: '*';
 DIVIDE: '/';
+MODULO: '%';
 ASSIGN: '=';
 EQUAL: '==';
 NOTEQUAL: '!=';
