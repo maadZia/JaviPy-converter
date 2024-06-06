@@ -35,7 +35,7 @@ parseTree1.png
 ![](https://github.com/maadZia/JaviPy-converter/blob/main/example/img/parseTree1.png)
 
 ## Instrukcja obsługi
-> [how to use](https://github.com/maadZia/JaviPy-converter/blob/main/instructions/instruction.md)
+> [How to use](https://github.com/maadZia/JaviPy-converter/blob/main/instructions/instruction.md)
 
 ![](https://github.com/maadZia/JaviPy-converter/blob/main/instructions/img/instruction3.png)
 
