@@ -11,7 +11,6 @@ class JaviPyConverter(javipyGrammarVisitor):
     def __init__(self):
         self.indentation_level = 0
         self.output = ""
-        self.error = ""
         self.fields = []
         self.has_constructor = False
         self.has_main = False
@@ -33,10 +32,7 @@ class JaviPyConverter(javipyGrammarVisitor):
     def visitProgram(self, ctx):
         for child in ctx.children:
             self.visit(child)
-        if len(self.error) == 0:
-            return self.output
-        else:
-            return self.error
+        return self.output
 
     def visitImport_statement(self, ctx):
         self.output += "import "
@@ -180,17 +176,6 @@ class JaviPyConverter(javipyGrammarVisitor):
         identifier = ctx.IDENTIFIER().getText()
         self.locals.append(identifier)
 
-    # check
-    # def visitAssignment(self, ctx):
-    #     this_prefix = "self." if ctx.THIS() else ""
-    #     identifier = ctx.IDENTIFIER()[0].getText()
-    #     assignment_value = self.visit(ctx.getChild(ctx.getChildCount() - 1))
-    #     self.output += f"{self.get_indent()}"
-    #     self.output += f"{this_prefix}{identifier} = {assignment_value}\n"
-    #     # dopytac po co
-    #     assignment_code = f"{this_prefix}{identifier} = {assignment_value}"
-    #     return assignment_code
-
     def visitAssignment(self, ctx):
         this_prefix = "self." if ctx.THIS() else ""
         identifier = ctx.IDENTIFIER()[0].getText()
@@ -198,8 +183,8 @@ class JaviPyConverter(javipyGrammarVisitor):
         if ctx.data_type():
             self.locals.append(identifier)
 
-        if identifier not in self.locals and len(self.error) == 0:
-            self.error = f"# variable '{identifier}' not found"
+        if identifier not in self.locals:
+            raise ConversionError(f"variable '{identifier}' not found")
 
         if ctx.function_call():
             assignment_value = self.visitFunction_call(ctx.function_call(), is_assign=True)
@@ -246,8 +231,8 @@ class JaviPyConverter(javipyGrammarVisitor):
             result += "not "
         if ctx.IDENTIFIER():
             result += ctx.IDENTIFIER().getText()
-            if ctx.IDENTIFIER().getText() not in self.locals and len(self.error) == 0:
-                self.error = f"# variable '{ctx.IDENTIFIER().getText()}' not found"
+            if ctx.IDENTIFIER().getText() not in self.locals:
+                raise ConversionError(f"variable '{ctx.IDENTIFIER().getText()}' not found")
         elif ctx.LEFTPAREN():
             result += f"({self.visit(ctx.logical_expression())})"
         elif ctx.literal():
@@ -277,8 +262,8 @@ class JaviPyConverter(javipyGrammarVisitor):
         if ctx.LEFTPAREN():
             return f"({self.visit(ctx.arithmetic_expression())})"
         elif ctx.IDENTIFIER():
-            if ctx.IDENTIFIER().getText() not in self.locals and len(self.error) == 0:
-                self.error = f"# variable '{ctx.IDENTIFIER().getText()}' not found"
+            if ctx.IDENTIFIER().getText() not in self.locals:
+                raise ConversionError(f"variable '{ctx.IDENTIFIER().getText()}' not found")
             return ctx.IDENTIFIER().getText()
         elif ctx.literal():
             return self.visit(ctx.literal())
@@ -329,8 +314,8 @@ class JaviPyConverter(javipyGrammarVisitor):
         switch_variable = ctx.IDENTIFIER().getText()
         switch_cases = [self.visit(switch_case_ctx) for switch_case_ctx in ctx.switch_block().switch_case()]
 
-        if switch_variable not in self.locals and len(self.error) == 0:
-            self.error = f"# variable '{switch_variable}' not found"
+        if switch_variable not in self.locals:
+            raise ConversionError(f"variable '{switch_variable}' not found")
 
         self.output += f"\n{self.get_indent()}if {switch_variable} == {switch_cases[0]}:\n"
         self.indent()
@@ -377,8 +362,8 @@ class JaviPyConverter(javipyGrammarVisitor):
         identifier = ctx.IDENTIFIER().getText()
         operator = "+= 1" if ctx.INCREMENT() else "-= 1"
         self.output += f"{self.get_indent()}{identifier} {operator}\n"
-        if identifier not in self.locals and len(self.error) == 0:
-            self.error = f"# variable '{identifier}' not found"
+        if identifier not in self.locals:
+            raise ConversionError(f"variable '{identifier}' not found")
 
     def visitFor_statement(self, ctx):
         init = self.visit(ctx.assignment())
@@ -416,8 +401,8 @@ class JaviPyConverter(javipyGrammarVisitor):
         elif ctx.expression():
             return self.visit(ctx.expression())
         elif ctx.IDENTIFIER():
-            if ctx.IDENTIFIER().getText() not in self.locals and len(self.error) == 0:
-                self.error = f"# variable '{ctx.IDENTIFIER().getText()}' not found"
+            if ctx.IDENTIFIER().getText() not in self.locals:
+                raise ConversionError(f"variable '{ctx.IDENTIFIER().getText()}' not found")
             return ctx.IDENTIFIER().getText()
         elif ctx.NUMBER():
             return ctx.NUMBER().getText()
@@ -478,8 +463,8 @@ class JaviPyConverter(javipyGrammarVisitor):
                     terms.append(f"self.{identifier}")
                 else:
                     terms.append(identifier)
-                if identifier not in self.locals and len(self.error) == 0:
-                    self.error = f"# variable '{identifier}' not found"
+                if identifier not in self.locals:
+                    raise ConversionError(f"variable '{identifier}' not found")
         return ", ".join(terms)
 
     def visitReturn_statement(self, ctx):
@@ -490,8 +475,8 @@ class JaviPyConverter(javipyGrammarVisitor):
             result += self.visit(ctx.literal())
         elif ctx.IDENTIFIER():
             result += ctx.IDENTIFIER().getText()
-            if ctx.IDENTIFIER().getText() not in self.locals and len(self.error) == 0:
-                self.error = f"# variable '{ctx.IDENTIFIER().getText()}' not found"
+            if ctx.IDENTIFIER().getText() not in self.locals:
+                raise ConversionError(f"variable '{ctx.IDENTIFIER().getText()}' not found")
 
         self.output += f"{self.get_indent()}return {result}\n"
 
@@ -506,8 +491,10 @@ class JaviPyConverter(javipyGrammarVisitor):
         if len(identifiers) == 2:
             object_name = identifiers[0].getText()
             function_name = identifiers[1].getText()
-            if object_name not in self.objects and len(self.error) == 0:
-                self.error = f"# object '{object_name}' not found"
+
+            if object_name not in self.objects:
+                raise ConversionError(f"object '{object_name}' not found")
+
         else:
             object_name = self.current_class
             function_name = identifiers[0].getText()
@@ -522,9 +509,6 @@ class JaviPyConverter(javipyGrammarVisitor):
 
 
 class ThrowingErrorListener(ErrorListener):
-    def __init__(self):
-        super(ThrowingErrorListener, self).__init__()
-
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
         raise SyntaxError(f"line {line}:{column} {msg}")
 
@@ -537,12 +521,18 @@ def convert(input_text):
     error_listener = ThrowingErrorListener()
     parser.removeErrorListeners()
     parser.addErrorListener(error_listener)
-    tree = parser.program()
-    converter = JaviPyConverter()
-    result = converter.visit(tree)
-    return result
+    try:
+        tree = parser.program()
+        converter = JaviPyConverter()
+        result = converter.visit(tree)
+        return result
+    except RecognitionException as e:
+        raise ConversionError(str(e))
+    except Exception as e:
+        raise ConversionError(str(e))
 
 
 class ConversionError(Exception):
     pass
+
 
