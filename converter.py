@@ -3,6 +3,7 @@ from antlr4 import *
 from gen.javipyGrammarLexer import javipyGrammarLexer
 from gen.javipyGrammarParser import javipyGrammarParser
 from gen.javipyGrammarVisitor import javipyGrammarVisitor
+from antlr4.error.ErrorListener import ErrorListener
 
 
 class JaviPyConverter(javipyGrammarVisitor):
@@ -85,7 +86,6 @@ class JaviPyConverter(javipyGrammarVisitor):
                 self.output += f"{self.get_indent()}self.{field} = {value}\n"
             self.output += "\n"
             self.dedent()
-            # self.fields.clear()
 
         for child in ctx.children:
             if isinstance(child, javipyGrammarParser.Method_declarationContext):
@@ -119,6 +119,8 @@ class JaviPyConverter(javipyGrammarVisitor):
         self.indent()
         self.visit(ctx.block())
         self.dedent()
+        self.locals.clear()
+        self.locals += [pair[0] for pair in self.fields]
         self.output += "\n"
 
     # check
@@ -145,6 +147,7 @@ class JaviPyConverter(javipyGrammarVisitor):
     # check
     def visitParameter(self, ctx):
         identifier = ctx.IDENTIFIER().getText()
+        self.locals.append(identifier)
         return f"{identifier}"
 
     # check
@@ -243,6 +246,8 @@ class JaviPyConverter(javipyGrammarVisitor):
             result += "not "
         if ctx.IDENTIFIER():
             result += ctx.IDENTIFIER().getText()
+            if ctx.IDENTIFIER().getText() not in self.locals and len(self.error) == 0:
+                self.error = f"# variable '{ctx.IDENTIFIER().getText()}' not found"
         elif ctx.LEFTPAREN():
             result += f"({self.visit(ctx.logical_expression())})"
         elif ctx.literal():
@@ -272,6 +277,8 @@ class JaviPyConverter(javipyGrammarVisitor):
         if ctx.LEFTPAREN():
             return f"({self.visit(ctx.arithmetic_expression())})"
         elif ctx.IDENTIFIER():
+            if ctx.IDENTIFIER().getText() not in self.locals and len(self.error) == 0:
+                self.error = f"# variable '{ctx.IDENTIFIER().getText()}' not found"
             return ctx.IDENTIFIER().getText()
         elif ctx.literal():
             return self.visit(ctx.literal())
@@ -322,6 +329,9 @@ class JaviPyConverter(javipyGrammarVisitor):
         switch_variable = ctx.IDENTIFIER().getText()
         switch_cases = [self.visit(switch_case_ctx) for switch_case_ctx in ctx.switch_block().switch_case()]
 
+        if switch_variable not in self.locals and len(self.error) == 0:
+            self.error = f"# variable '{switch_variable}' not found"
+
         self.output += f"\n{self.get_indent()}if {switch_variable} == {switch_cases[0]}:\n"
         self.indent()
         self.case_statements(ctx.switch_block().switch_case(0))
@@ -367,6 +377,8 @@ class JaviPyConverter(javipyGrammarVisitor):
         identifier = ctx.IDENTIFIER().getText()
         operator = "+= 1" if ctx.INCREMENT() else "-= 1"
         self.output += f"{self.get_indent()}{identifier} {operator}\n"
+        if identifier not in self.locals and len(self.error) == 0:
+            self.error = f"# variable '{identifier}' not found"
 
     def visitFor_statement(self, ctx):
         init = self.visit(ctx.assignment())
@@ -404,6 +416,8 @@ class JaviPyConverter(javipyGrammarVisitor):
         elif ctx.expression():
             return self.visit(ctx.expression())
         elif ctx.IDENTIFIER():
+            if ctx.IDENTIFIER().getText() not in self.locals and len(self.error) == 0:
+                self.error = f"# variable '{ctx.IDENTIFIER().getText()}' not found"
             return ctx.IDENTIFIER().getText()
         elif ctx.NUMBER():
             return ctx.NUMBER().getText()
@@ -476,6 +490,8 @@ class JaviPyConverter(javipyGrammarVisitor):
             result += self.visit(ctx.literal())
         elif ctx.IDENTIFIER():
             result += ctx.IDENTIFIER().getText()
+            if ctx.IDENTIFIER().getText() not in self.locals and len(self.error) == 0:
+                self.error = f"# variable '{ctx.IDENTIFIER().getText()}' not found"
 
         self.output += f"{self.get_indent()}return {result}\n"
 
@@ -505,14 +521,28 @@ class JaviPyConverter(javipyGrammarVisitor):
             self.output += f"{self.get_indent()}{function_call_code}\n"
 
 
+class ThrowingErrorListener(ErrorListener):
+    def __init__(self):
+        super(ThrowingErrorListener, self).__init__()
+
+    def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
+        raise SyntaxError(f"line {line}:{column} {msg}")
+
+
 def convert(input_text):
     input_stream = InputStream(input_text)
     lexer = javipyGrammarLexer(input_stream)
     token_stream = CommonTokenStream(lexer)
     parser = javipyGrammarParser(token_stream)
+    error_listener = ThrowingErrorListener()
+    parser.removeErrorListeners()
+    parser.addErrorListener(error_listener)
     tree = parser.program()
-
     converter = JaviPyConverter()
     result = converter.visit(tree)
-
     return result
+
+
+class ConversionError(Exception):
+    pass
+
